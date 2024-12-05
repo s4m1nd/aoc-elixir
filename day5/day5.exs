@@ -3,9 +3,11 @@ defmodule Day5 do
     input = File.read!("input.txt")
     {rules, updates} = parse_input(input)
     
-    correct_updates = Enum.filter(updates, fn update -> is_valid_order?(update, rules) end)
+    incorrect_updates = Enum.reject(updates, fn update -> is_valid_order?(update, rules) end)
     
-    middle_sum = correct_updates
+    corrected_updates = Enum.map(incorrect_updates, fn update -> correct_order(update, rules) end)
+    
+    middle_sum = corrected_updates
     |> Enum.map(fn update -> Enum.at(update, div(length(update) - 1, 2)) end)
     |> Enum.sum()
     
@@ -39,6 +41,20 @@ defmodule Day5 do
           x_index = Enum.find_index(update, &(&1 == x))
           y_index = Enum.find_index(update, &(&1 == y))
           x_index < y_index
+      end
+    end)
+  end
+
+  def correct_order(update, rules) do
+    Enum.sort(update, fn a, b ->
+      # If there's a rule about a and b, follow it
+      case Enum.find(rules, fn {x, y} -> x == a and y == b end) do
+        {_, _} -> false  # a must come before b
+        nil -> 
+          case Enum.find(rules, fn {x, y} -> x == b and y == a end) do
+            {_, _} -> true  # b must come before a
+            nil -> true     # no rule, keep original order
+          end
       end
     end)
   end
