@@ -1,17 +1,19 @@
 defmodule Day1 do
   def process_input(input) do
-    values = for line <- String.split(input, "\n", trim: true),
-                 line != "" do
-      parts = String.split(line, ~r/\s+/, trim: true)
-      
-      case parts do
-        [left, right] -> 
-          {String.to_integer(left), String.to_integer(right)}
-        _ -> 
-          nil
+    values =
+      for line <- String.split(input, "\n", trim: true),
+          line != "" do
+        parts = String.split(line, ~r/\s+/, trim: true)
+
+        case parts do
+          [left, right] ->
+            {String.to_integer(left), String.to_integer(right)}
+
+          _ ->
+            nil
+        end
       end
-    end
-    
+
     values = Enum.reject(values, &is_nil/1)
     Enum.unzip(values)
   end
@@ -26,9 +28,9 @@ defmodule Day1 do
 
   def calculate_similarity_score({left, right}) do
     right_frequencies = Enum.frequencies(right)
-    
+
     left
-    |> Enum.map(fn l -> 
+    |> Enum.map(fn l ->
       l * Map.get(right_frequencies, l, 0)
     end)
     |> Enum.sum()
@@ -43,7 +45,7 @@ defmodule Day1 do
     similarity_score = calculate_similarity_score({left, right})
 
     # IO.inspect(left)
-    # IO.inspect(right) 
+    # IO.inspect(right)
     # IO.inspect(distances)
     IO.puts("Total distance: #{total_distance}")
     IO.puts("Similarity score: #{similarity_score}")

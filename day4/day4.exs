@@ -17,8 +17,8 @@ defmodule Day4 do
     rows = length(grid)
     cols = length(Enum.at(grid, 0))
 
-    for r <- 0..(rows-1),
-        c <- 0..(cols-1),
+    for r <- 0..(rows - 1),
+        c <- 0..(cols - 1),
         reduce: 0 do
       acc -> acc + count_starting_at(grid, r, c)
     end
@@ -26,14 +26,22 @@ defmodule Day4 do
 
   def count_starting_at(grid, start_row, start_col) do
     directions = [
-      {0, 1},   # right
-      {1, 0},   # down
-      {1, 1},   # diagonal down-right
-      {-1, 1},  # diagonal up-right
-      {0, -1},  # left
-      {-1, 0},  # up
-      {-1, -1}, # diagonal up-left
-      {1, -1}   # diagonal down-left
+      # right
+      {0, 1},
+      # down
+      {1, 0},
+      # diagonal down-right
+      {1, 1},
+      # diagonal up-right
+      {-1, 1},
+      # left
+      {0, -1},
+      # up
+      {-1, 0},
+      # diagonal up-left
+      {-1, -1},
+      # diagonal down-left
+      {1, -1}
     ]
 
     Enum.count(directions, fn {dr, dc} ->
@@ -50,10 +58,10 @@ defmodule Day4 do
     |> Enum.all?(fn {char, index} ->
       new_row = row + index * dr
       new_col = col + index * dc
-      
-      new_row >= 0 and new_row < rows and 
-      new_col >= 0 and new_col < cols and
-      Enum.at(grid, new_row) |> Enum.at(new_col) == char
+
+      new_row >= 0 and new_row < rows and
+        new_col >= 0 and new_col < cols and
+        Enum.at(grid, new_row) |> Enum.at(new_col) == char
     end)
   end
 end
